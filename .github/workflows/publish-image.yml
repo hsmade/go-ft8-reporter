@@ -29,6 +29,12 @@ jobs:
         with:
           go-version-file: go.mod
 
+      - name: Verify vendored dependencies
+        run: |
+          sh scripts/vendor-deps.sh
+          git diff --exit-code -- vendor/
+          test -z "$(git ls-files --others --exclude-standard -- vendor/)"
+
       - name: Test
         run: go test -race ./...
 
