@@ -52,6 +52,14 @@ At 1 MHz, the receiver decimates to 25 kHz and then uses a band-limited rational
 resampler (12/25) to produce exactly 12 kHz.
 The receiver does not configure the source sample rate.
 
+At 960 ksample/s and 2.4 Msample/s, the 12 ksample/s receiver uses two FIR
+stages (960k → 96k → 12k and 2.4M → 240k → 12k). This avoids applying the
+narrow channel filter directly at the full input rate. Filtering remains
+allocation-free after initialization, with group delay included in slot timing.
+Run `go test ./pkg/sdr -run '^$' -bench BenchmarkReceiver12kPipeline -benchmem`
+to compare the old single-stage path with staged mixing/filtering on your CPU.
+This benchmark excludes TCP input and FT8/FT4 message decoding.
+
 ## Decoding
 
 `--mode ft8` collects UTC-aligned 15-second slots (00, 15, 30, 45 seconds).

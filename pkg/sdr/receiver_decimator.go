@@ -25,12 +25,13 @@ func NewReceiverDecimator(decimation int, transition, cutoff float32, window Win
 	if blockSize <= 0 {
 		return nil, fmt.Errorf("block size must be > 0")
 	}
-	// 960k -> 192k -> 48k and 2.4M -> 240k -> 48k.
+	// Keep the existing 48 kHz paths and stage the live 12 kHz paths too.
+	// 960k -> 96k -> 12k; 2.4M -> 240k -> 12k.
 	factor := 1
 	switch decimation {
 	case 20:
 		factor = 5
-	case 50:
+	case 50, 80, 200:
 		factor = 10
 	}
 	// The coarse filter passband ends at intermediate Fs/8. Fall back for
