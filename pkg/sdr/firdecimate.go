@@ -19,6 +19,7 @@ type FIRDecimator struct {
 	pending    []complex64
 	scratch    []complex64
 	pendingLen int
+	boundary   []complex64
 }
 
 func NewFIRDecimator(decimation int, transition, cutoff float32, window WindowType) (*FIRDecimator, error) {
@@ -39,6 +40,7 @@ func NewFIRDecimator(decimation int, transition, cutoff float32, window WindowTy
 		taps:       taps,
 		pending:    make([]complex64, len(taps)+decimation-1),
 		scratch:    make([]complex64, len(taps)+decimation-1),
+		boundary:   make([]complex64, 2*len(taps)+decimation-1),
 	}, nil
 }
 
@@ -54,16 +56,23 @@ func (f *FIRDecimator) Process(in []complex64, out []complex64) int {
 		maxOut = len(out)
 	}
 
+	// Only outputs crossing a block boundary need a joined history/input
+	// buffer. All other dot products read directly from the caller's input.
+	if maxOut > 0 && f.pendingLen > 0 {
+		copy(f.boundary, f.pending[:f.pendingLen])
+		n := min(len(in), len(f.taps))
+		copy(f.boundary[f.pendingLen:], in[:n])
+	}
 	for i := 0; i < maxOut; i++ {
 		start := i * f.decimation
-		var accI float32
-		var accQ float32
-		for tapIndex, tap := range f.taps {
-			sample := f.sampleAt(in, start+tapIndex)
-			accI += real(sample) * tap
-			accQ += imag(sample) * tap
+		var samples []complex64
+		if start < f.pendingLen {
+			samples = f.boundary[start : start+len(f.taps)]
+		} else {
+			start -= f.pendingLen
+			samples = in[start : start+len(f.taps)]
 		}
-		out[i] = complex(accI, accQ)
+		out[i] = firDot(samples, f.taps)
 	}
 
 	f.savePending(in, maxOut*f.decimation)
