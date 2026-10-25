@@ -9,3 +9,5 @@
 !cmd/**
 !pkg/
 !pkg/**
+!vendor/
+!vendor/**

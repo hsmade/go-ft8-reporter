@@ -2,6 +2,12 @@
 A lightweight FT8/FT4 receiver that reports received packets to PSK Reporter.
 It takes a rtl-tcp stream as input and can tune inside the delivered I/Q stream.
 
+Dependencies are checked into `vendor/`. Refresh them with
+`sh scripts/vendor-deps.sh` rather than `go mod vendor` alone: the script also
+preserves the nested PocketFFT C sources and license notices required by CGO.
+CI checks that vendoring is reproducible, and Docker uses the same vendored
+dependencies as the test suite.
+
 ## Container image
 
 Pushing a Git tag runs the test suite and publishes an amd64/arm64 image to
