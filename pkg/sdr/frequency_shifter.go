@@ -12,8 +12,8 @@ type IQBlock interface {
 // A rate of 0.25 shifts by Fs/4.
 type FrequencyShifter struct {
 	rate           float32
-	startingPhase  float32
-	phaseIncrement float32
+	startingPhase  float64
+	phaseIncrement float64
 	dsin           [4]float32
 	dcos           [4]float32
 }
@@ -26,9 +26,9 @@ func NewFrequencyShifter(rate float32) *FrequencyShifter {
 
 func (s *FrequencyShifter) SetRate(rate float32) {
 	s.rate = rate
-	s.phaseIncrement = float32(twoPi) * rate
+	s.phaseIncrement = twoPi * float64(rate)
 	for i := 0; i < len(s.dsin); i++ {
-		phase := s.phaseIncrement * float32(i+1)
+		phase := s.phaseIncrement * float64(i+1)
 		s.dsin[i] = float32(math.Sin(float64(phase)))
 		s.dcos[i] = float32(math.Cos(float64(phase)))
 	}
@@ -81,13 +81,7 @@ func (s *FrequencyShifter) Process(in []complex64, out []complex64) int {
 		sinStart = sinNext
 	}
 
-	s.startingPhase += float32(n) * s.phaseIncrement
-	for s.startingPhase > math.Pi {
-		s.startingPhase -= float32(twoPi)
-	}
-	for s.startingPhase < -math.Pi {
-		s.startingPhase += float32(twoPi)
-	}
+	s.startingPhase = math.Remainder(s.startingPhase+float64(n)*s.phaseIncrement, twoPi)
 
 	return n
 }

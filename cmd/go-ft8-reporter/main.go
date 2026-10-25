@@ -35,10 +35,36 @@ var (
 	metricsAddress = flag.String("metrics-address", ":2112", "Prometheus HTTP listen address; empty disables the endpoint")
 )
 
+var multiChannels channelFlags
+var centerFrequency = flag.Uint64("center-frequency", 0, "source center frequency in Hz for shared channels")
+var cpuProfile = flag.String("cpu-profile", "", "write CPU profile until shutdown (optional)")
+
+func init() {
+	flag.Var(&multiChannels, "channel", "shared channel MODE:DIAL_HZ:METRICS_PORT (repeat for FT8/FT4)")
+}
+
 func main() {
+	if err := run(); err != nil {
+		log.Print(err)
+		os.Exit(1)
+	}
+}
+func run() error {
 	flag.Parse()
 	logger := log.New(os.Stderr, "", log.Ldate|log.Ltime|log.LUTC)
+	cleanup, err := startCPUProfile(*cpuProfile)
+	if err != nil {
+		return err
+	}
+	defer cleanup()
+	if len(multiChannels) > 0 {
+		return runBand(logger)
+	}
+	runSingle(logger)
+	return nil
+}
 
+func runSingle(logger *log.Logger) {
 	if *mode != "ft8" && *mode != "ft4" {
 		log.Fatal("mode must be ft8 or ft4")
 	}

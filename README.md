@@ -215,3 +215,33 @@ conversion, then SciPy rational upsampling and frequency translation. Its basic
 message fixture. The test encoder is independent of the Go decoder. A small,
 seeded noise component exercises IQ quantization; this fixture checks receiver
 wiring and tuning, rather than weak-signal sensitivity.
+
+## Shared FT8/FT4 frontend
+
+Run one process per SDR band with repeated `--channel MODE:DIAL_HZ:METRICS_PORT`
+arguments and the actual input `--center-frequency`. For example:
+
+```bash
+go-ft8-reporter --addr 127.0.0.1:6002 --sample-rate 2400000 \
+  --center-frequency 144775000 \
+  --channel ft8:144174000:9210 --channel ft4:144170000:9211 \
+  --callsign PI4NOS/ALM --locator JO22OJ
+```
+
+The socket, unsigned-IQ conversion, full-rate mixer and coarse FIR are shared.
+Each mode has its own low-rate mixer, narrow FIR, UTC slot collector, bounded
+queue, decoder worker, reporting socket/deduplication and metrics endpoint.
+The existing metric names and `mode` labels are preserved. A slow decoder drops
+only its own slots; the other mode continues. Shared-process Go/process metrics
+appear at both endpoints: do not sum those process metrics across modes.
+
+Shared mode supports rates divisible by 120000 Hz (including 960000 and 2400000)
+and validates that the channels fit both the source and coarse passbands.
+The actual source rate must match `--sample-rate`; rtl_tcp does not convey it.
+Single-mode and 1 MHz replay invocations remain supported as before.
+`--no-report` applies to every channel; file replay always disables uploads.
+
+For local CPU profiling, mount a writable directory into the container and use
+`--cpu-profile /profiles/receiver.prof`. Stop it with SIGTERM to finish the
+profile; inspect it with `go tool pprof -top receiver.prof`. No profiling HTTP
+endpoint is exposed. Compare CPU once per process, not once per metrics port.
