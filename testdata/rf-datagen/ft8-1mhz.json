@@ -1,0 +1,18 @@
+{
+  "generator": "https://github.com/Quantum-Serendipity/rf-datagen",
+  "generator_commit": "7ca4983fd964e300f79b49a472aeda9624f67b32",
+  "encoder": "WSJT-X ft8code via rf_datagen.generators.wsjtx.encode_ft8",
+  "message": "CQ PA3XYZ JO21",
+  "mode": "ft8",
+  "format": "cu8",
+  "sample_rate": 1000000,
+  "duration_seconds": 17,
+  "start_time": "2026-10-25T00:00:14Z",
+  "slot_time": "2026-10-25T00:00:15Z",
+  "dial_offset_hz": -125000,
+  "audio_frequency_hz": 1000,
+  "shift": 0.125,
+  "seed": 20261025,
+  "noise_sigma_per_component": 0.005,
+  "sha256": "2800a103477f965284419c681d63f8a87f97d22924d68d56e7b1a77351186295"
+}

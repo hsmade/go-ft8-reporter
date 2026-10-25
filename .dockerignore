@@ -1,0 +1,11 @@
+# Only include build inputs, excluding local binaries, IQ fixtures and secrets.
+**
+!Dockerfile
+!.dockerignore
+!go.mod
+!go.sum
+!LICENSE
+!cmd/
+!cmd/**
+!pkg/
+!pkg/**

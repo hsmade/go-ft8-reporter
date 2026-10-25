@@ -31,3 +31,7 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+
+# Reproducible IQ fixtures (regenerate with scripts/generate-ft8-iq.py)
+/testdata/rf-datagen/*.cu8
+/scripts/__pycache__/

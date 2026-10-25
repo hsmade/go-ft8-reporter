@@ -1,0 +1,73 @@
+{
+  "generator": "https://github.com/Quantum-Serendipity/rf-datagen",
+  "generator_commit": "7ca4983fd964e300f79b49a472aeda9624f67b32",
+  "encoder": "WSJT-X ft8code via rf_datagen.generators.wsjtx.encode_ft8",
+  "expected": [
+    {
+      "slot_time": "2026-10-25T00:00:00Z",
+      "message": "CQ PA3XYZ JO21",
+      "audio_frequency_hz": 1000,
+      "dt_seconds": 0.0,
+      "amplitude": 0.2
+    },
+    {
+      "slot_time": "2026-10-25T00:00:15Z",
+      "message": "CQ K1ABC FN42",
+      "audio_frequency_hz": 700,
+      "dt_seconds": -0.1,
+      "amplitude": 0.2
+    },
+    {
+      "slot_time": "2026-10-25T00:00:15Z",
+      "message": "CQ W9XYZ EN37",
+      "audio_frequency_hz": 1900,
+      "dt_seconds": 0.1,
+      "amplitude": 0.14
+    },
+    {
+      "slot_time": "2026-10-25T00:00:30Z",
+      "message": "CQ PA3XYZ JO21",
+      "audio_frequency_hz": 700,
+      "dt_seconds": 0.0,
+      "amplitude": 0.2
+    },
+    {
+      "slot_time": "2026-10-25T00:00:30Z",
+      "message": "CQ G4ABC IO91",
+      "audio_frequency_hz": 1500,
+      "dt_seconds": -0.08,
+      "amplitude": 0.14
+    },
+    {
+      "slot_time": "2026-10-25T00:00:30Z",
+      "message": "CQ DL1ABC JO62",
+      "audio_frequency_hz": 2500,
+      "dt_seconds": 0.12,
+      "amplitude": 0.1
+    },
+    {
+      "slot_time": "2026-10-25T00:00:45Z",
+      "message": "K1ABC W9XYZ -10",
+      "audio_frequency_hz": 1000,
+      "dt_seconds": 0.05,
+      "amplitude": 0.2
+    },
+    {
+      "slot_time": "2026-10-25T00:00:45Z",
+      "message": "W9XYZ K1ABC R-08",
+      "audio_frequency_hz": 2200,
+      "dt_seconds": -0.05,
+      "amplitude": 0.14
+    }
+  ],
+  "mode": "ft8",
+  "format": "cu8",
+  "sample_rate": 1000000,
+  "duration_seconds": 62,
+  "start_time": "2026-10-24T23:59:59Z",
+  "dial_offset_hz": -125000,
+  "shift": 0.125,
+  "seed": 20261025,
+  "noise_sigma_per_component": 0.005,
+  "sha256": "0fe176cd2e6acf516e29658d8a9c7082c0b2c7b5f33922233505e9b4e85b7051"
+}
